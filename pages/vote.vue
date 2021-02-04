@@ -2,18 +2,23 @@
   <div class="vote">
     <!-- 投票标题and分享按钮 -->
     <div class="titleAndShare">
-      <div class="title">吃啥？</div>
+      <div class="title">吃啥，自己报名咯！</div>
       <div class="share">
-        <img src alt />
+        <img src="@/static/image/share.png" alt />
         <button class="shareButton" open-type="share">分享</button>
       </div>
     </div>
     <!-- 投票列表 -->
     <div class="voteList">
-      <div v-for="(item, index) in voteList" :key="index" @click="setVote(item)" class="voteItem">
+      <div
+        v-for="(item, index) in voteList"
+        :key="index"
+        @click="setVote(item)"
+        class="voteItem"
+      >
         <div class="title">{{ item.name }}</div>
         <div class="right">
-          <span class="num">{{ item.voteNum || 0 }}票</span>
+          <span class="num">{{ item.voteNum || 0 }}人</span>
         </div>
       </div>
     </div>
@@ -27,7 +32,7 @@ export default {
   components: {},
   data() {
     return {
-      voteList: []
+      voteList: [],
     };
   },
   computed: {},
@@ -41,7 +46,7 @@ export default {
   methods: {
     // 获取投票列表
     getVoteList() {
-      votePort.getVoteList().then(res => {
+      votePort.getVoteList().then((res) => {
         console.log(res, "可投票列表");
         this.voteList = res.data;
         this.getVoteRes();
@@ -49,10 +54,10 @@ export default {
     },
     // 获取投票情况
     getVoteRes() {
-      votePort.getVoteRes().then(res => {
-        this.voteList = this.voteList.map(el => {
+      votePort.getVoteRes().then((res) => {
+        this.voteList = this.voteList.map((el) => {
           el.voteNum = 0;
-          res.data.map(item => {
+          res.data.map((item) => {
             item.voteItemId == el._id && (el.voteNum += 1);
           });
           return el;
@@ -65,40 +70,47 @@ export default {
       db.collection("voteRes")
         .where({ date: getNowFormatDate() })
         .watch({
-          onChange: snapshot => {
+          onChange: (snapshot) => {
             this.getVoteRes();
           },
-          onError: err => {
+          onError: (err) => {
             console.error("the watch closed because of error", err);
-          }
+          },
         });
     },
     // 点击投票
     setVote(item) {
-      console.log(item);
-      wx.showLoading({ title: "投票中", mask: true });
-      votePort.isVote().then(res => {
-        if (res.data.length) {
-          wx.hideLoading();
-          wx.showToast({
-            title: "今日已经投过票了哦",
-            icon: "none",
-            mask: true
-          });
-        } else {
-          votePort.setVote(item._id).then(res => {
-            wx.hideLoading();
-            wx.showToast({
-              title: "投票成功",
-              icon: "none",
-              mask: true
+      wx.showModal({
+        title: "报名确认",
+        content: "确定要报名吃 " + item.name + ' 吗？',
+        success(res) {
+          if (res.confirm) {
+            wx.showLoading({ title: "报名中", mask: true });
+            votePort.isVote().then((res) => {
+              if (res.data.length) {
+                wx.hideLoading();
+                wx.showToast({
+                  title: "今日已经报名了哦",
+                  icon: "none",
+                  mask: true,
+                });
+              } else {
+                votePort.setVote(item._id).then((res) => {
+                  wx.hideLoading();
+                  wx.showToast({
+                    title: "报名成功",
+                    icon: "none",
+                    mask: true,
+                  });
+                  this.getVoteList();
+                });
+              }
             });
-            this.getVoteList();
-          });
-        }
+          }
+        },
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -121,7 +133,6 @@ page {
       overflow: hidden;
       img {
         position: absolute;
-        background: red;
         width: 100%;
         height: 100%;
       }

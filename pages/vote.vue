@@ -13,7 +13,7 @@
       <div v-for="(item, index) in voteList" :key="index" @click="setVote(item)" class="voteItem">
         <div class="title">{{ item.name }}</div>
         <div class="right">
-          <span class="num">{{ item.voteNum }}票</span>
+          <span class="num">{{ item.voteNum || 0 }}票</span>
         </div>
       </div>
     </div>
@@ -21,7 +21,8 @@
 </template>
 
 <script>
-import { votePort } from "@/static/port/cloudPort";
+import { db, votePort } from "@/static/port/cloudPort";
+import { getNowFormatDate } from "@/static/utils";
 export default {
   components: {},
   data() {
@@ -32,7 +33,9 @@ export default {
   computed: {},
   watch: {},
   onShow() {
+    wx.showShareMenu();
     this.getVoteList();
+    this.watchVoteRes();
   },
   onLoad() {},
   methods: {
@@ -40,24 +43,35 @@ export default {
     getVoteList() {
       votePort.getVoteList().then(res => {
         console.log(res, "可投票列表");
-        this.voteList = res.data.map(item => {
-          item.voteNum = 0;
-          return item;
-        });
+        this.voteList = res.data;
         this.getVoteRes();
       });
     },
     // 获取投票情况
     getVoteRes() {
       votePort.getVoteRes().then(res => {
-        res.data.map(item => {
-          this.voteList = this.voteList.map(el => {
+        this.voteList = this.voteList.map(el => {
+          el.voteNum = 0;
+          res.data.map(item => {
             item.voteItemId == el._id && (el.voteNum += 1);
-            return el;
           });
+          return el;
         });
         console.log(this.voteList, res, "投票情况");
       });
+    },
+    // 即时获取图片情况
+    watchVoteRes() {
+      db.collection("voteRes")
+        .where({ date: getNowFormatDate() })
+        .watch({
+          onChange: snapshot => {
+            this.getVoteRes();
+          },
+          onError: err => {
+            console.error("the watch closed because of error", err);
+          }
+        });
     },
     // 点击投票
     setVote(item) {

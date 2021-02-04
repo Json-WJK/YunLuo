@@ -1,0 +1,24 @@
+{
+	"pages": [
+		{
+			"path": "pages/vote",
+			"style": {
+				"navigationBarTitleText": "投票",
+				"backgroundColor": "#F8F8F8"
+			}
+		},
+		{
+			"path": "pages/home",
+			"style": {
+				"navigationBarTitleText": "首页"
+			}
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	},
+	"cloud": true
+}

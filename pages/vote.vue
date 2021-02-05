@@ -107,6 +107,7 @@ export default {
                   wx.showModal({
                     title: "别点了",
                     content: "今天已经报名了" + item.name + "，你忘了吗？",
+                    confirmText: "我知道了",
                     showCancel: false,
                     success(res) {}
                   });

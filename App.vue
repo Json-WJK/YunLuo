@@ -1,9 +1,9 @@
 <script>
-import { votePort } from "static/port/cloudPort";
+import { common, votePort } from "static/port/cloudPort";
 export default {
   onLaunch: function() {
     // console.log('App Launch')
-    votePort.getUserInfo().then(res => {
+    common.getUserInfo().then(res => {
       wx.setStorageSync("openId", res.result.openid);
     });
   },

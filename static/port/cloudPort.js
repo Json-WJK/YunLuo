@@ -6,8 +6,11 @@ const db = wx.cloud.database({
 });
 const openId = () => wx.getStorageSync('openId')
 
+const common = {
+  getUserInfo: () => wx.cloud.callFunction({ name: "index", data: { api: "getUserInfo" } }), // 获取用户openId
+}
+
 const votePort = {
-  getUserInfo: () => wx.cloud.callFunction({ name: "index", data: { api: "getUserInfo" } }), // 获取用户信息
   getVoteList: () => db.collection("vote").get(), // 获取投票列表
   getVoteRes: () => db.collection("voteRes").where({ date: getNowFormatDate() }).get(), // 获取今日投票情况
   isVote: () => db.collection("voteRes").where({ date: getNowFormatDate(), openId: openId() }).get(), // 查询用户今日是否投过票
@@ -15,4 +18,4 @@ const votePort = {
   updateVote: data => db.collection('voteRes').doc(data._id).update({ data: { voteItemId: data.id } })
 }
 
-export { db, openId, votePort }
+export { db, openId, common, votePort }

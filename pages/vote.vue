@@ -60,7 +60,7 @@ export default {
         console.log(this.voteList, res, "投票情况");
       });
     },
-    // 即时获取图片情况
+    // 即时获取投票情况
     watchVoteRes() {
       db.collection("voteRes")
         .where({ date: getNowFormatDate() })

@@ -19,9 +19,7 @@
     </div>
     <!-- 今日推荐 -->
     <div class="recommends">
-      <div class="btn" @click="lookRecommends">
-        <span>查看推荐</span>
-      </div>
+      <button class="btn" open-type="getUserInfo" @getuserinfo="lookRecommends">查看推荐</button>
     </div>
   </div>
 </template>
@@ -127,8 +125,23 @@ export default {
       });
     },
     // 查看推荐
-    lookRecommends() {
-      wx.navigateTo({ url: "/pages/recommends" });
+    lookRecommends(res) {
+      console.log(res, "授权情况");
+      wx.showLoading({
+        title: "授权中...",
+        mask: true
+      });
+      if (res.detail.errMsg == "getUserInfo:ok") {
+        wx.hideLoading();
+        wx.setStorageSync("userInfo", res.detail.userInfo);
+        wx.navigateTo({ url: "/pages/recommends" });
+      } else {
+        wx.hideLoading();
+        wx.showToast({
+          title: "授权失败",
+          icon: "none"
+        });
+      }
     }
   }
 };
@@ -212,9 +225,12 @@ page {
       display: flex;
       align-items: center;
       justify-content: center;
-      span {
-        color: #fff;
-      }
+      color: #fff;
+      font-size: 34rpx;
+      padding: 0;
+    }
+    button::after {
+      border: 0;
     }
   }
 }

@@ -87,18 +87,19 @@ export default {
                 if (res.data[0].voteItemId != item._id) {
                   wx.showModal({
                     title: "善变之人（渣男）",
-                    content:
-                      "今天已经报名了" + item.name + "，是否修改报名结果？",
+                    content: "今天已经报名了，是否修改报名结果？",
                     success(successRes) {
-                      votePort
-                        .updateVote({ _id: res.data[0]._id, id: item._id })
-                        .then(updateVoteRes => {
-                          wx.showToast({
-                            title: "报名成功",
-                            icon: "none",
-                            mask: true
+                      if (successRes.confirm) {
+                        votePort
+                          .updateVote({ _id: res.data[0]._id, id: item._id })
+                          .then(updateVoteRes => {
+                            wx.showToast({
+                              title: "报名成功",
+                              icon: "none",
+                              mask: true
+                            });
                           });
-                        });
+                      }
                     }
                   });
                 } else {

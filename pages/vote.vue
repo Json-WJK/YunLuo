@@ -88,6 +88,7 @@ export default {
                   wx.showModal({
                     title: "善变之人（渣男）",
                     content: "今天已经报名了，是否修改报名结果？",
+                    confirmText: "我是渣男",
                     success(successRes) {
                       if (successRes.confirm) {
                         votePort
@@ -106,6 +107,7 @@ export default {
                   wx.showModal({
                     title: "别点了",
                     content: "今天已经报名了" + item.name + "，你忘了吗？",
+                    showCancel: false,
                     success(res) {}
                   });
                 }

@@ -8,9 +8,9 @@
 			}
 		},
 		{
-			"path": "pages/home",
+			"path": "pages/recommends",
 			"style": {
-				"navigationBarTitleText": "首页"
+				"navigationBarTitleText": "推荐"
 			}
 		}
 	],

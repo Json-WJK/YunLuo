@@ -17,6 +17,12 @@
         </div>
       </div>
     </div>
+    <!-- 今日推荐 -->
+    <div class="recommends">
+      <div class="btn" @click="lookRecommends">
+        <span>查看推荐</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -119,6 +125,10 @@ export default {
           });
         }
       });
+    },
+    // 查看推荐
+    lookRecommends() {
+      wx.navigateTo({ url: "/pages/recommends" });
     }
   }
 };
@@ -129,12 +139,21 @@ page {
   background: #f8f8f8;
 }
 .vote {
+  box-sizing: border-box;
+  padding: 170rpx 0 110rpx;
   .titleAndShare {
     box-sizing: border-box;
     padding: 40rpx;
+    height: 160rpx;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: #f8f8f8;
+    box-shadow: rgb(200, 200, 200) 0rpx 0rpx 10rpx;
     .share {
       position: relative;
       width: 80rpx;
@@ -172,6 +191,29 @@ page {
         .num {
           font-size: 26rpx;
         }
+      }
+    }
+  }
+  .recommends {
+    width: 100%;
+    height: 100rpx;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    box-shadow: rgb(200, 200, 200) 0rpx 0rpx 10rpx;
+    display: flex;
+    align-items: center;
+    .btn {
+      width: 80%;
+      height: 80%;
+      border-radius: 30rpx;
+      margin: auto;
+      background: #07c160;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      span {
+        color: #fff;
       }
     }
   }
